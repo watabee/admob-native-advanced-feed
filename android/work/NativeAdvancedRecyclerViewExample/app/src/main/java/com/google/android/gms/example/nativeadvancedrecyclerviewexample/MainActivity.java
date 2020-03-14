@@ -18,6 +18,10 @@ package com.google.android.gms.example.nativeadvancedrecyclerviewexample;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,6 +51,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Initialize the Google Mobile Ads SDK.
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(final InitializationStatus initializationStatus) {
+                Log.e("MainActivity", "onInitializationComplete");
+            }
+        });
 
         if (savedInstanceState == null) {
             // Create new fragment to display a progress spinner while the data set for the
