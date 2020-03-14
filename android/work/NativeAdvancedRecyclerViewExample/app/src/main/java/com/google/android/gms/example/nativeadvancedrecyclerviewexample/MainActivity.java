@@ -15,11 +15,7 @@
  */
 package com.google.android.gms.example.nativeadvancedrecyclerviewexample;
 
-import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -32,6 +28,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * A simple activity showing the use of menu items in
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 String menuItemImageName = menuItemObject.getString("photo");
 
                 MenuItem menuItem = new MenuItem(menuItemName, menuItemDescription, menuItemPrice,
-                        menuItemCategory, menuItemImageName);
+                    menuItemCategory, menuItemImageName);
                 mRecyclerViewItems.add(menuItem);
             }
         } catch (IOException | JSONException exception) {
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             String jsonDataString = null;
             inputStream = getResources().openRawResource(R.raw.menu_items_json);
             BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(inputStream, "UTF-8"));
+                new InputStreamReader(inputStream, "UTF-8"));
             while ((jsonDataString = bufferedReader.readLine()) != null) {
                 builder.append(jsonDataString);
             }

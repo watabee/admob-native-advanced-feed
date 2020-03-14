@@ -16,7 +16,6 @@
 package com.google.android.gms.example.nativeadvancedrecyclerviewexample;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * The {@link RecyclerViewAdapter} class.
@@ -88,7 +89,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View menuItemLayoutView = LayoutInflater.from(viewGroup.getContext()).inflate(
-                R.layout.menu_item_container, viewGroup, false);
+            R.layout.menu_item_container, viewGroup, false);
         return new MenuItemViewHolder(menuItemLayoutView);
     }
 
@@ -104,7 +105,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         // Get the menu item image resource ID.
         String imageName = menuItem.getImageName();
         int imageResID = mContext.getResources().getIdentifier(imageName, "drawable",
-                mContext.getPackageName());
+            mContext.getPackageName());
 
         // Add the menu item details to the menu item view.
         menuItemHolder.menuItemImage.setImageResource(imageResID);
