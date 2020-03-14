@@ -18,7 +18,12 @@ package com.google.android.gms.example.nativeadvancedrecyclerviewexample;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.formats.NativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
@@ -43,6 +48,15 @@ import androidx.recyclerview.widget.RecyclerView;
  * a {@link RecyclerView} widget.
  */
 public class MainActivity extends AppCompatActivity {
+
+    // The number of native ads to load and display.
+    public static final int NUMBER_OF_ADS = 5;
+
+    // The AdLoader used to load ads.
+    private AdLoader adLoader;
+
+    // List of native ads that have been successfully loaded.
+    private List<UnifiedNativeAd> nativeAds = new ArrayList<>();
 
     // List of MenuItems that populate the RecyclerView.
     private List<Object> mRecyclerViewItems = new ArrayList<>();
@@ -72,8 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Update the RecyclerView item's list with menu items.
             addMenuItemsFromJson();
-
-            loadMenu();
+            loadNativeAds();
         }
     }
 
@@ -150,4 +163,46 @@ public class MainActivity extends AppCompatActivity {
         return new String(builder);
     }
 
+    private void insertAdsInMenuItems() {
+        if (nativeAds.size() <= 0) {
+            return;
+        }
+
+        final int offset = (mRecyclerViewItems.size() / nativeAds.size()) + 1;
+        int index = 0;
+        for (UnifiedNativeAd ad : nativeAds) {
+            mRecyclerViewItems.add(index, ad);
+            index = index + offset;
+        }
+    }
+
+    private void loadNativeAds() {
+        final AdLoader.Builder builder = new AdLoader.Builder(this, getString(R.string.ad_unit_id));
+        adLoader = builder.forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+            @Override
+            public void onUnifiedNativeAdLoaded(final UnifiedNativeAd unifiedNativeAd) {
+                // A native ad loaded successfully, check if the ad loader has finished loading
+                // and if so, insert the ads into the list.
+                nativeAds.add(unifiedNativeAd);
+                if (!adLoader.isLoading()) {
+                    insertAdsInMenuItems();
+                    loadMenu();
+                }
+            }
+        }).withAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(final int i) {
+                // A native ad failed to load, check if the ad loader has finished loading
+                // and if so, insert the ads into the list.
+                Log.e("MainActivity", "The previous native ad failed to load. Attempting to load another.");
+                if (!adLoader.isLoading()) {
+                    insertAdsInMenuItems();
+                    loadMenu();
+                }
+            }
+        }).build();
+
+        // Load the Native Express ad.
+        adLoader.loadAds(new AdRequest.Builder().build(), NUMBER_OF_ADS);
+    }
 }
